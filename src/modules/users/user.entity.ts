@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 import { Teacher } from '../teachers/teacher.entity';
+import { StationEntity } from '../stations/station.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -16,6 +17,9 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @OneToMany(type => Teacher, teacher => teacher.user)
+  @OneToMany(() => Teacher, teacher => teacher.user)
   teachers: Array<Teacher>;
+
+  @OneToMany(() => StationEntity, station => station.user)
+  stations: Array<StationEntity>;
 }

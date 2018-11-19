@@ -5,6 +5,7 @@ import { UsersModule } from 'modules/users/users.module';
 import { EntriesModule } from 'modules/entries/entries.module';
 import { AuthModule } from 'modules/auth/auth.module';
 import { TeachersModule } from 'modules/teachers/teachers.module';
+import { StationsModule } from 'modules/stations/stations.module';
 
 const ormconfig = require('../../ormconfig.json');
 
@@ -21,6 +22,7 @@ ormconfig.synchronize = process.env.NODE_ENV !== 'production';
     UsersModule,
     TeachersModule,
     EntriesModule,
+    StationsModule,
     TypeOrmModule.forRoot(ormconfig),
   ],
 })

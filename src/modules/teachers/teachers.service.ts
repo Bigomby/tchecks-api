@@ -1,5 +1,5 @@
 import { Injectable, UseInterceptors } from '@nestjs/common';
-import { Repository, FindManyOptions } from 'typeorm';
+import { Repository, FindManyOptions, FindConditions } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { ITeacher } from 'modules/teachers/interfaces/teacher.interface';
@@ -12,17 +12,26 @@ export class TeachersService {
     @InjectRepository(Teacher) private readonly db: Repository<Teacher>,
   ) {}
 
-  public async create(user: User, template: ITeacher): Promise<ITeacher> {
+  public async create(user: UserEntity, template: ITeacher): Promise<ITeacher> {
     const teacher = new Teacher();
+
     teacher.name = template.name;
     teacher.code = template.code;
     teacher.user = user;
-
     await this.db.save(teacher);
+
     return teacher;
   }
 
-  public async find(options: FindManyOptions<Teacher>): Promise<ITeacher[]> {
+  public async find(options: FindManyOptions<Teacher>): Promise<Teacher[]> {
     return this.db.find(options);
+  }
+
+  public async update(options: FindConditions<Teacher>, teacher: ITeacher) {
+    await this.db.update(options, teacher);
+  }
+
+  public async delete(options: FindConditions<Teacher>) {
+    await this.db.delete(options);
   }
 }

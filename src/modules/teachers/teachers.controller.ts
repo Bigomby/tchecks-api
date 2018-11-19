@@ -35,5 +35,36 @@ export class TeachersController {
   public find(@User() user: UserEntity): Promise<ITeacher[]> {
     return this.teachersService.find({ where: { user: { id: user.id } } });
   }
+
+  @Get(':teacherId')
+  public async findById(
+    @User() user: UserEntity,
+    @Param('teacherId') teacherId: string,
+  ): Promise<ITeacher> {
+    const [teacher] = await this.teachersService.find({
+      where: { id: teacherId, user: { id: user.id } },
+    });
+
+    return teacher;
+  }
+
+  @Put(':teacherId')
+  public update(
+    @User() user: UserEntity,
+    @Param('teacherId') teacherId: string,
+    @Body() teacher: UpdateTeacherDto,
+  ) {
+    this.teachersService.update(
+      { id: teacherId, user: { id: user.id } },
+      teacher,
+    );
+  }
+
+  @Delete(':teacherId')
+  public delete(
+    @User() user: UserEntity,
+    @Param('teacherId') teacherId: string,
+  ) {
+    this.teachersService.delete({ id: teacherId, user: { id: user.id } });
   }
 }

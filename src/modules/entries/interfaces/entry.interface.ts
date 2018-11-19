@@ -1,7 +1,11 @@
-import { Teacher } from 'modules/teachers/interfaces/teacher.iterface';
+import { ITeacher } from 'modules/teachers/interfaces/teacher.interface';
+import { IStation } from 'modules/stations/interfaces/station.interface';
 
-export interface Entry {
+export interface IEntry {
   id?: string;
   timestamp?: number;
-  teacher?: Teacher;
+  detail?: string;
+  created?: Date;
+  teacher?: ITeacher;
+  station?: IStation;
 }

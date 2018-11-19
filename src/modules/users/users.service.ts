@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { promisify } from 'util';
 
-import { User } from 'modules/users/user.entity';
+import { UserEntity } from 'modules/users/user.entity';
 import { IUser } from 'modules/users/interfaces/user.interface';
 
 const hashPasswordAsync = promisify(bcrypt.hash);
@@ -13,11 +13,12 @@ const comparePasswordAsync = promisify(bcrypt.compare);
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private readonly users: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly users: Repository<UserEntity>,
   ) {}
 
-  public async create({ name, email, password }: IUser): Promise<User> {
-    const user = new User();
+  public async create({ name, email, password }: IUser): Promise<UserEntity> {
+    const user = new UserEntity();
 
     user.name = name;
     user.email = email;
@@ -29,7 +30,7 @@ export class UsersService {
     return user;
   }
 
-  public async findById(id: string): Promise<User> {
+  public async findById(id: string): Promise<UserEntity> {
     const user = await this.users.findOne(id);
     delete user.password;
 

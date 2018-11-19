@@ -7,7 +7,7 @@ import { promisify } from 'util';
 
 import { JwtPayload } from 'modules/auth/interfaces/jwt-payload.interface';
 import { UsersService } from 'modules/users/users.service';
-import { User } from 'modules/users/user.entity';
+import { UserEntity } from 'modules/users/user.entity';
 import { IUser } from 'modules/users/interfaces/user.interface';
 
 const comparePasswordAsync = promisify(bcrypt.compare);
@@ -16,7 +16,8 @@ const comparePasswordAsync = promisify(bcrypt.compare);
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    @InjectRepository(User) private readonly users: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly users: Repository<UserEntity>,
   ) {}
 
   public async createToken(email: string, password: string): Promise<string> {

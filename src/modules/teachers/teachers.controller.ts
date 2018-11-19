@@ -2,7 +2,7 @@ import { Controller, UseInterceptors, UseGuards } from '@nestjs/common';
 import { Body, Get, Post } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-import { User } from 'modules/users/user.entity';
+import { UserEntity } from 'modules/users/user.entity';
 import { ITeacher } from 'modules/teachers/interfaces/teacher.interface';
 import { CreateTeacherDto } from 'modules/teachers/dtos/create-teacher.dto';
 import { TeachersService } from 'modules/teachers/teachers.service';
@@ -17,7 +17,7 @@ export class TeachersController {
   @UseGuards(AuthGuard())
   @UseInterceptors(AttachUserInterceptor)
   public create(
-    @UserEntity() user: User,
+    @User() user: UserEntity,
     @Body() createTeacherDto: CreateTeacherDto,
   ): Promise<ITeacher> {
     return this.db.create(user, createTeacherDto);
@@ -26,8 +26,8 @@ export class TeachersController {
   @Get()
   @UseGuards(AuthGuard())
   @UseInterceptors(AttachUserInterceptor)
-  public find(@UserEntity() user: User): Promise<ITeacher[]> {
-    console.log(user);
-    return this.db.find({});
+  public find(@User() user: UserEntity): Promise<ITeacher[]> {
+    return this.teachersService.find({ where: { user: { id: user.id } } });
+  }
   }
 }

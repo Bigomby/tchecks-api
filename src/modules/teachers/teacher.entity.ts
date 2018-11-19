@@ -6,7 +6,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import { User } from '../users/user.entity';
+import { UserEntity } from '../users/user.entity';
 import { Entry } from '../entries/entry.entity';
 
 @Entity()
@@ -20,8 +20,8 @@ export class Teacher {
   @Column()
   code: string;
 
-  @ManyToOne(type => User, user => user.teachers)
-  user: User;
+  @ManyToOne(type => UserEntity, user => user.teachers)
+  user: UserEntity;
 
   @OneToMany(type => Entry, entry => entry.teacher)
   entries: Array<Entry>;

@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { ITeacher } from 'modules/teachers/interfaces/teacher.interface';
 import { Teacher } from 'modules/teachers/teacher.entity';
-import { User } from 'modules/users/user.entity';
+import { UserEntity } from 'modules/users/user.entity';
 
 @Injectable()
 export class TeachersService {

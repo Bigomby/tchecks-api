@@ -7,6 +7,7 @@ import { AuthService } from 'modules/auth/auth.service';
 import { AuthController } from 'modules/auth/auth.controller';
 import { JwtStrategy } from 'modules/auth/strategies/jwt.strategy';
 import { UserEntity } from 'modules/users/user.entity';
+import { OwnerGuard } from 'modules/auth/guards/owner.guard';
 
 @Module({
   imports: [
@@ -17,8 +18,8 @@ import { UserEntity } from 'modules/users/user.entity';
       signOptions: { expiresIn: 3600 },
     }),
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, OwnerGuard],
+  exports: [AuthService, OwnerGuard],
   controllers: [AuthController],
-  exports: [AuthService],
 })
 export class AuthModule {}

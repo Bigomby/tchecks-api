@@ -20,21 +20,26 @@ export class AuthService {
     private readonly users: Repository<UserEntity>,
   ) {}
 
-  public async createToken(email: string, password: string): Promise<string> {
+  public async createToken(email: string, password: string) {
     const user = await this.users.findOne({ where: { email } });
+
     if (!user) {
-      throw Error('Invalid credentials');
+      throw new UnauthorizedException();
     }
 
     const isMatch = await comparePasswordAsync(password, user.password);
     if (!isMatch) {
-      throw Error('Invalid credentials');
+      throw new UnauthorizedException();
     }
 
-    return this.jwtService.sign({ id: user.id });
+    return { token: this.jwtService.sign({ id: user.id }), userId: user.id };
   }
 
-  public async validate({ id }: JwtPayload): Promise<boolean> {
-    return !!(await this.users.findOne(id));
+  public createApiKey(id: string): string {
+    return this.jwtService.sign({ id });
+  }
+
+  public verify(token: string): JwtPayload {
+    return this.jwtService.verify(token);
   }
 }

@@ -1,31 +1,37 @@
-import { Controller, UseInterceptors, UseGuards } from '@nestjs/common';
-import { Body, Get, Post } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import {
+  Controller,
+  UseInterceptors,
+  UseGuards,
+  NotFoundException,
+} from '@nestjs/common';
+import { Body, Param, Get, Put, Post, Delete } from '@nestjs/common';
 
 import { UserEntity } from 'modules/users/user.entity';
 import { ITeacher } from 'modules/teachers/interfaces/teacher.interface';
 import { CreateTeacherDto } from 'modules/teachers/dtos/create-teacher.dto';
+import { UpdateTeacherDto } from 'modules/teachers/dtos/update-teacher.dto';
 import { TeachersService } from 'modules/teachers/teachers.service';
-import { AttachUserInterceptor } from 'modules/users/attach-user.interceptor';
-import { UserEntity } from 'modules/users/attach-user.interceptor';
+import { AttachUser } from 'modules/users/interceptors/attach-user.interceptor';
+import { User } from 'modules/users/user.decorator';
+import { Entry } from 'modules/entries/entry.entity';
+import { IEntry } from 'modules/entries/interfaces/entry.interface';
+import { OwnerGuard } from 'modules/auth/guards/owner.guard';
 
-@Controller('teachers')
+@UseGuards(OwnerGuard)
+@UseInterceptors(AttachUser)
+@Controller('/users/:userId/teachers')
 export class TeachersController {
-  constructor(private readonly db: TeachersService) {}
+  constructor(private readonly teachersService: TeachersService) {}
 
   @Post()
-  @UseGuards(AuthGuard())
-  @UseInterceptors(AttachUserInterceptor)
   public create(
     @User() user: UserEntity,
     @Body() createTeacherDto: CreateTeacherDto,
   ): Promise<ITeacher> {
-    return this.db.create(user, createTeacherDto);
+    return this.teachersService.create(user, createTeacherDto);
   }
 
   @Get()
-  @UseGuards(AuthGuard())
-  @UseInterceptors(AttachUserInterceptor)
   public find(@User() user: UserEntity): Promise<ITeacher[]> {
     return this.teachersService.find({ where: { user: { id: user.id } } });
   }

@@ -13,13 +13,4 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: 'secretKey',
     });
   }
-
-  async validate({ id }: JwtPayload): Promise<boolean> {
-    const isValid = await this.authService.validate({ id });
-    if (!isValid) {
-      throw new UnauthorizedException();
-    }
-
-    return isValid;
-  }
 }

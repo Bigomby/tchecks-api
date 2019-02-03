@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "paths": { "*": ["types/*"] },
     "module": "commonjs",
     "declaration": false,
     "noImplicitAny": true,
@@ -13,7 +12,8 @@
     "sourceMap": true,
     "allowJs": true,
     "outDir": "./dist",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {}
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]

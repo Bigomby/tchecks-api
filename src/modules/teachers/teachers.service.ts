@@ -20,6 +20,8 @@ export class TeachersService {
     teacher.user = user;
     await this.db.save(teacher);
 
+    delete teacher.user;
+
     return teacher;
   }
 

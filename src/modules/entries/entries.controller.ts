@@ -111,4 +111,29 @@ export class EntriesController {
 
     await this.entriesService.delete(entryId);
   }
+
+  @Post('entries')
+  @ApiUseTags('entries')
+  @ApiImplicitHeader({ name: 'api_key', required: true })
+  public async createEntryFromStation(
+    @Body() dto: CreateEntryDto,
+    @Headers('api_key') apiKey: string,
+  ) {
+    const [station] = await this.stationsService.find({
+      where: { apiKey },
+      relations: ['user', 'user.teachers'],
+    });
+    if (!station) {
+      throw new UnauthorizedException();
+    }
+
+    const [teacher] = station.user.teachers.filter(
+      ({ code }) => code === dto.code,
+    );
+    if (!teacher) {
+      throw new UnauthorizedException();
+    }
+
+    return this.entriesService.create(dto, teacher, station);
+  }
 }

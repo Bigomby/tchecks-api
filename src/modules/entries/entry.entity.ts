@@ -24,9 +24,12 @@ export class Entry extends BaseEntity {
   @CreateDateColumn()
   created: Date;
 
-  @ManyToOne(() => Teacher, teacher => teacher.entries, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Teacher, teacher => teacher.entries, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
   teacher: Teacher;
 
   @ManyToOne(() => StationEntity, station => station.entries)
-  station: Teacher;
+  station: StationEntity;
 }

@@ -1,11 +1,12 @@
-import { Injectable, UseInterceptors } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOneOptions, FindManyOptions } from 'typeorm';
+import { Repository, FindOneOptions } from 'typeorm';
 
 import { Teacher } from 'modules/teachers/teacher.entity';
 import { Entry } from 'modules/entries/entry.entity';
 import { IEntry } from 'modules/entries/interfaces/entry.interface';
+import { StationEntity } from 'modules/stations/station.entity';
 
 @Injectable()
 export class EntriesService {
@@ -14,19 +15,23 @@ export class EntriesService {
   ) {}
 
   public async create(
+    template: IEntry,
     teacher: Teacher,
-    timestamp: number,
-    detail: string = '',
+    station?: StationEntity,
   ): Promise<Entry> {
-    if (!timestamp) {
-      timestamp = Math.floor(new Date().getTime() / 1000);
+    if (!template.timestamp) {
+      template.timestamp = Math.floor(new Date().getTime() / 1000);
     }
 
     const entry = new Entry();
-    entry.timestamp = timestamp;
-    entry.detail = detail;
+    entry.timestamp = template.timestamp;
+    entry.detail = template.detail;
     entry.teacher = teacher;
+    entry.station = station;
     await this.db.save(entry);
+
+    delete entry.station;
+    delete entry.teacher.code;
 
     return entry;
   }

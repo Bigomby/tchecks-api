@@ -20,7 +20,7 @@ export class StationEntity {
   @Column()
   apiKey: string;
 
-  @ManyToOne(() => UserEntity, user => user.stations)
+  @ManyToOne(() => UserEntity, user => user.stations, { nullable: false })
   user: UserEntity;
 
   @OneToMany(() => Entry, entry => entry.station)

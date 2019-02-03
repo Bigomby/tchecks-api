@@ -14,6 +14,7 @@ async function bootstrap() {
     .setDescription('API for the teachecks dashboard and statin apps')
     .setVersion('0.1')
     .addBearerAuth()
+    .setSchemes('http', 'https')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

@@ -20,9 +20,9 @@ export class Teacher {
   @Column()
   code: string;
 
-  @ManyToOne(type => UserEntity, user => user.teachers)
+  @ManyToOne(_type => UserEntity, user => user.teachers, { nullable: false })
   user: UserEntity;
 
-  @OneToMany(type => Entry, entry => entry.teacher)
+  @OneToMany(_type => Entry, entry => entry.teacher)
   entries: Array<Entry>;
 }

@@ -5,10 +5,7 @@ import {
   UnauthorizedException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { Reflector } from '@nestjs/core';
 
-import { JwtPayload } from 'modules/auth/interfaces/jwt-payload.interface';
 import { AuthService } from 'modules/auth/auth.service';
 
 export const USER_PARAM_METADATA = '__user-id-param__';
@@ -56,7 +53,7 @@ export class OwnerGuard implements CanActivate {
   }
 
   private getToken(authorization: string): string {
-    const [__, token] = authorization.split('Bearer ');
+    const [, token] = authorization.split('Bearer ');
     if (!token) {
       throw new InternalServerErrorException();
     }

@@ -30,7 +30,6 @@ export class StationsService {
   }
 
   public async find(
-    user: UserEntity,
     options: FindManyOptions<StationEntity>,
   ): Promise<StationEntity[]> {
     return await this.db.find(options);

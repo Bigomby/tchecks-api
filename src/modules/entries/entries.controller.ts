@@ -1,28 +1,42 @@
 import { Controller, UseInterceptors, UseGuards } from '@nestjs/common';
-import { Body, Param, Get, Put, Post, Delete } from '@nestjs/common';
-import { NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Body, Param, Headers, Get, Put, Post, Delete } from '@nestjs/common';
+import {
+  NotFoundException,
+  ForbiddenException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import {
+  ApiUseTags,
+  ApiImplicitParam,
+  ApiBearerAuth,
+  ApiImplicitHeader,
+} from '@nestjs/swagger';
 
 import { User } from 'modules/users/user.decorator';
 import { UserEntity } from 'modules/users/user.entity';
 import { IEntry } from 'modules/entries/interfaces/entry.interface';
 import { TeachersService } from 'modules/teachers/teachers.service';
 import { EntriesService } from 'modules/entries/entries.service';
-import { Entry } from 'modules/entries/entry.entity';
 import { OwnerGuard } from 'modules/auth/guards/owner.guard';
 import { AttachUser } from 'modules/users/interceptors/attach-user.interceptor';
 import { CreateEntryDto } from 'modules/entries/dtos/create-entry.dto';
 import { UpdateEntryDto } from 'modules/entries/dtos/update-entry.dto';
+import { StationsService } from 'modules/stations/stations.service';
 
 @Controller()
-@UseGuards(OwnerGuard)
-@UseInterceptors(AttachUser)
 export class EntriesController {
   constructor(
     private readonly entriesService: EntriesService,
     private readonly teachersService: TeachersService,
+    private readonly stationsService: StationsService,
   ) {}
 
   @Get('/users/:userId/teachers/:teacherId/entries')
+  @ApiUseTags('entries')
+  @ApiImplicitParam({ name: 'userId' })
+  @ApiBearerAuth()
+  @UseGuards(OwnerGuard)
+  @UseInterceptors(AttachUser)
   public async findEntries(
     @User() user: UserEntity,
     @Param('teacherId') teacherId: string,
@@ -40,6 +54,11 @@ export class EntriesController {
   }
 
   @Post('/users/:userId/teachers/:teacherId/entries')
+  @ApiUseTags('entries')
+  @ApiImplicitParam({ name: 'userId' })
+  @ApiBearerAuth()
+  @UseGuards(OwnerGuard)
+  @UseInterceptors(AttachUser)
   public async createEntry(
     @User() user: UserEntity,
     @Param('teacherId') teacherId: string,
@@ -53,10 +72,15 @@ export class EntriesController {
       throw new NotFoundException();
     }
 
-    return this.entriesService.create(teacher, timestamp, detail);
+    return this.entriesService.create({ timestamp, detail }, teacher);
   }
 
   @Put('/users/:userId/entries/:entryId')
+  @ApiUseTags('entries')
+  @ApiImplicitParam({ name: 'userId' })
+  @ApiBearerAuth()
+  @UseGuards(OwnerGuard)
+  @UseInterceptors(AttachUser)
   public async updateEntry(
     @User() user: UserEntity,
     @Param('entryId') entryId: string,
@@ -66,6 +90,11 @@ export class EntriesController {
   }
 
   @Delete('/users/:userId/entries/:entryId')
+  @ApiUseTags('entries')
+  @ApiImplicitParam({ name: 'userId' })
+  @ApiBearerAuth()
+  @UseGuards(OwnerGuard)
+  @UseInterceptors(AttachUser)
   public async deleteEntry(
     @User() user: UserEntity,
     @Param('entryId') entryId: string,

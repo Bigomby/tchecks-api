@@ -1,10 +1,6 @@
-import {
-  Controller,
-  UseInterceptors,
-  UseGuards,
-  NotFoundException,
-} from '@nestjs/common';
+import { Controller, UseInterceptors, UseGuards } from '@nestjs/common';
 import { Body, Param, Get, Put, Post, Delete } from '@nestjs/common';
+import { ApiUseTags, ApiImplicitParam, ApiBearerAuth } from '@nestjs/swagger';
 
 import { UserEntity } from 'modules/users/user.entity';
 import { ITeacher } from 'modules/teachers/interfaces/teacher.interface';
@@ -13,8 +9,6 @@ import { UpdateTeacherDto } from 'modules/teachers/dtos/update-teacher.dto';
 import { TeachersService } from 'modules/teachers/teachers.service';
 import { AttachUser } from 'modules/users/interceptors/attach-user.interceptor';
 import { User } from 'modules/users/user.decorator';
-import { Entry } from 'modules/entries/entry.entity';
-import { IEntry } from 'modules/entries/interfaces/entry.interface';
 import { OwnerGuard } from 'modules/auth/guards/owner.guard';
 
 @UseGuards(OwnerGuard)
@@ -24,6 +18,9 @@ export class TeachersController {
   constructor(private readonly teachersService: TeachersService) {}
 
   @Post()
+  @ApiUseTags('teachers')
+  @ApiImplicitParam({ name: 'userId' })
+  @ApiBearerAuth()
   public create(
     @User() user: UserEntity,
     @Body() createTeacherDto: CreateTeacherDto,
@@ -32,11 +29,17 @@ export class TeachersController {
   }
 
   @Get()
+  @ApiUseTags('teachers')
+  @ApiImplicitParam({ name: 'userId' })
+  @ApiBearerAuth()
   public find(@User() user: UserEntity): Promise<ITeacher[]> {
     return this.teachersService.find({ where: { user: { id: user.id } } });
   }
 
   @Get(':teacherId')
+  @ApiUseTags('teachers')
+  @ApiImplicitParam({ name: 'userId' })
+  @ApiBearerAuth()
   public async findById(
     @User() user: UserEntity,
     @Param('teacherId') teacherId: string,
@@ -49,6 +52,9 @@ export class TeachersController {
   }
 
   @Put(':teacherId')
+  @ApiUseTags('teachers')
+  @ApiImplicitParam({ name: 'userId' })
+  @ApiBearerAuth()
   public update(
     @User() user: UserEntity,
     @Param('teacherId') teacherId: string,
@@ -61,6 +67,9 @@ export class TeachersController {
   }
 
   @Delete(':teacherId')
+  @ApiUseTags('teachers')
+  @ApiImplicitParam({ name: 'userId' })
+  @ApiBearerAuth()
   public delete(
     @User() user: UserEntity,
     @Param('teacherId') teacherId: string,
